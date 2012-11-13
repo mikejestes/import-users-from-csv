@@ -193,6 +193,7 @@ class IS_IU_Import_Users {
 	 * @since 0.5
 	 */
 	public static function import_csv( $filename, $password_nag = false, $new_user_notification = false ) {
+		global $wpdb;
 		$errors = $user_ids = array();
 
 		// User data fields list used to differentiate with user meta
@@ -304,6 +305,10 @@ class IS_IU_Import_Users {
 				do_action( 'is_iu_post_user_import', $user_id );
 
 				$user_ids[] = $user_id;
+			}
+
+			if (!empty($userdata['user_pass'])) {
+				$wpdb->update($wpdb->users, array('user_pass' => $userdata['user_pass']), array('ID' => $user_id));
 			}
 
 			$rkey++;
